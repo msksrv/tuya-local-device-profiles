@@ -22,9 +22,9 @@ Adds full local configuration of voltage protection logic:
 ## Installation
 
 1. Copy the desired YAML file into:
-custom_components/tuya_local/devices/
-2. Restart Home Assistant
-3. Reconfigure the device if needed
+   custom_components/tuya_local/devices/
+3. Restart Home Assistant
+4. Reconfigure the device if needed
 
 ## Notes
 
@@ -64,7 +64,7 @@ Use at your own discretion.
 ## Установка
 
 1. Скопируйте нужный YAML-файл в каталог:
-2. custom_components/tuya_local/devices/
+   custom_components/tuya_local/devices/
 
 2. Перезапустите Home Assistant
 3. При необходимости заново настройте устройство
