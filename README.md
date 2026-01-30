@@ -31,10 +31,14 @@ custom_components/tuya_local/devices/
 These profiles follow the existing Tuya Local device YAML format.  
 They are maintained separately to avoid impacting upstream maintenance policy.
 
+Upstream context: https://github.com/make-all/tuya-local/issues/4413
+
+
 ## Disclaimer
 
 This is **not an official Tuya Local repository**.  
 Use at your own discretion.
+
 
 ---
 
@@ -69,6 +73,8 @@ Use at your own discretion.
 
 Профили соответствуют существующему формату YAML Tuya Local.  
 Они поддерживаются отдельно, чтобы не влиять на политику сопровождения основного репозитория.
+
+Upstream context: https://github.com/make-all/tuya-local/issues/4413
 
 ## Отказ от ответственности
 
