@@ -1,0 +1,493 @@
+name: Energy monitoring SY2 (AT-Q-SY2-JWT)
+products:
+  - id: 3lbgj7cu27nsmh0w
+    model: AT-Q-SY2-JWT
+
+entities:
+  # -------------------------
+  # Relay
+  # -------------------------
+  - entity: switch
+    class: outlet
+    name: Switch
+    dps:
+      - id: 1
+        type: boolean
+        name: switch
+
+  # -------------------------
+  # Countdown / timers
+  # -------------------------
+  - entity: time
+    category: config
+    translation_key: timer
+    dps:
+      - id: 9
+        type: integer
+        name: second
+        range:
+          min: 0
+          max: 86400
+
+      # Cycle timer (packed structure, keep as blob)
+      - id: 42
+        type: base64
+        name: cycle_timer
+        optional: true
+
+  # -------------------------
+  # Measurements
+  # -------------------------
+  - entity: sensor
+    name: Total Energy
+    class: energy
+    dps:
+      - id: 17
+        type: integer
+        name: sensor
+        unit: kWh
+        class: total_increasing   # <-- ЭТО и есть state_class для tuya-local
+        force: true
+        mapping:
+          - scale: 1000
+
+  - entity: sensor
+    name: Current
+    class: current
+    dps:
+      - id: 18
+        type: integer
+        name: sensor
+        unit: mA
+        class: measurement
+        force: true
+
+  - entity: sensor
+    name: Power
+    class: power
+    dps:
+      - id: 19
+        type: integer
+        name: sensor
+        unit: W
+        class: measurement
+        force: true
+        mapping:
+          - scale: 10
+
+  - entity: sensor
+    name: Voltage
+    class: voltage
+    dps:
+      - id: 20
+        type: integer
+        name: sensor
+        unit: V
+        class: measurement
+        force: true
+        mapping:
+          - scale: 10
+
+  - entity: sensor
+    name: Test Bit
+    category: diagnostic
+    dps:
+      - id: 21
+        type: integer
+        name: sensor
+
+  # -------------------------
+  # Faults (DP26 bitmap)
+  # labels: ov_cr, ov_vol, ov_pwr, ls_cr, ls_vol, ls_pow
+  # -------------------------
+  - entity: binary_sensor
+    name: "Fault: Over Current"
+    class: problem
+    category: diagnostic
+    icon: mdi:current-ac
+    dps:
+      - id: 26
+        type: bitfield
+        name: sensor
+        mapping:
+          - mask: 1
+            value: true
+          - value: false
+
+  - entity: binary_sensor
+    name: "Fault: Over Voltage"
+    class: problem
+    category: diagnostic
+    icon: mdi:flash-alert
+    dps:
+      - id: 26
+        type: bitfield
+        name: sensor
+        mapping:
+          - mask: 2
+            value: true
+          - value: false
+
+  - entity: binary_sensor
+    name: "Fault: Over Power"
+    class: problem
+    category: diagnostic
+    icon: mdi:transmission-tower-export
+    dps:
+      - id: 26
+        type: bitfield
+        name: sensor
+        mapping:
+          - mask: 4
+            value: true
+          - value: false
+
+  - entity: binary_sensor
+    name: "Fault: Low Current"
+    class: problem
+    category: diagnostic
+    icon: mdi:current-ac
+    dps:
+      - id: 26
+        type: bitfield
+        name: sensor
+        mapping:
+          - mask: 8
+            value: true
+          - value: false
+
+  - entity: binary_sensor
+    name: "Fault: Under Voltage"
+    class: problem
+    category: diagnostic
+    icon: mdi:flash-alert-outline
+    dps:
+      - id: 26
+        type: bitfield
+        name: sensor
+        mapping:
+          - mask: 16
+            value: true
+          - value: false
+
+  - entity: binary_sensor
+    name: "Fault: Under Power"
+    class: problem
+    category: diagnostic
+    icon: mdi:transmission-tower-import
+    dps:
+      - id: 26
+        type: bitfield
+        name: sensor
+        mapping:
+          - mask: 32
+            value: true
+          - value: false
+
+  - entity: binary_sensor
+    name: Fault (Any)
+    class: problem
+    category: diagnostic
+    icon: mdi:alert-circle
+    dps:
+      - id: 26
+        type: bitfield
+        name: sensor
+        mapping:
+          - dps_val: 0
+            value: false
+          - value: true
+
+  - entity: sensor
+    name: Fault Mask
+    category: diagnostic
+    icon: mdi:code-tags
+    dps:
+      - id: 26
+        type: bitfield
+        name: sensor
+
+  # -------------------------
+  # Calibration coefficients (read-only)
+  # -------------------------
+  - entity: sensor
+    name: Voltage Coefficient
+    category: diagnostic
+    icon: mdi:tune-vertical
+    dps:
+      - id: 22
+        type: integer
+        name: sensor
+
+  - entity: sensor
+    name: Current Coefficient
+    category: diagnostic
+    icon: mdi:tune-vertical
+    dps:
+      - id: 23
+        type: integer
+        name: sensor
+
+  - entity: sensor
+    name: Power Coefficient
+    category: diagnostic
+    icon: mdi:tune-vertical
+    dps:
+      - id: 24
+        type: integer
+        name: sensor
+
+  - entity: sensor
+    name: Energy Coefficient
+    category: diagnostic
+    icon: mdi:tune-vertical
+    dps:
+      - id: 25
+        type: integer
+        name: sensor
+
+  # -------------------------
+  # Power-on state / LED / lock
+  # -------------------------
+  - entity: select
+    category: config
+    translation_key: initial_state
+    dps:
+      - id: 38
+        type: string
+        name: option
+        mapping:
+          - dps_val: "power_off"
+            value: "off"
+          - dps_val: "power_on"
+            value: "on"
+          - dps_val: "last"
+            value: "memory"
+
+  - entity: select
+    category: config
+    translation_key: light_mode
+    dps:
+      - id: 40
+        type: string
+        name: option
+        mapping:
+          - dps_val: "relay"
+            value: state
+          - dps_val: "pos"
+            value: locator
+          - dps_val: "none"
+            value: "off"
+          - dps_val: "on"
+            value: "on"
+
+  - entity: switch
+    name: Child Lock
+    icon: mdi:lock
+    category: config
+    dps:
+      - id: 41
+        type: boolean
+        name: switch
+
+  - entity: sensor
+    name: Temperature
+    class: temperature
+    force: true
+    category: diagnostic
+    dps:
+      - id: 47
+        type: integer
+        name: sensor
+        unit: "°C"
+        class: measurement
+
+  # =========================================================
+  # Alarm configuration (DP48 / DP49) — parsed to separate UI
+  # Format: each alarm record = 4 bytes:
+  # [code] [action] [threshold_hi] [threshold_lo]  (big-endian)
+  #
+  # DP48 (8 bytes):  [05 high temp] [07 high power]
+  # DP49 (12 bytes): [01 overcurrent] [03 overvoltage] [04 undervoltage]
+  #
+  # action: 0 = Disabled, 1 = Enable
+  # =========================================================
+
+    # -------------------------
+  # DP48 — High temperature (code 05) record #1 bytes 0..3
+  # -------------------------
+  - entity: select
+    name: High Temp Action
+    category: config
+    icon: mdi:alert
+    dps:
+      - id: 48
+        type: base64
+        name: option
+        mask: 00ff000000000000
+        force: true
+        mapping:
+          - dps_val: 0
+            value: Disabled
+          - dps_val: 1
+            value: Enabled
+
+  - entity: number
+    name: High Temp Threshold
+    category: config
+    icon: mdi:thermometer
+    dps:
+      - id: 48
+        type: base64
+        name: value
+        mask: 0000ffff00000000
+        unit: "°C"
+        range:
+          min: 40
+          max: 100
+
+  # -------------------------
+  # DP48 — High power (code 07) record #2 bytes 4..7
+  # -------------------------
+  - entity: select
+    name: High Power Action
+    category: config
+    icon: mdi:alert
+    dps:
+      - id: 48
+        type: base64
+        name: option
+        mask: 0000000000ff0000
+        mapping:
+          - dps_val: 0
+            value: Disabled
+          - dps_val: 1
+            value: Enabled
+
+  - entity: number
+    name: High Power Threshold
+    category: config
+    icon: mdi:flash
+    dps:
+      - id: 48
+        type: base64
+        name: value
+        mask: 000000000000ffff
+        unit: W
+        range:
+          min: 1
+          max: 26
+
+  # -------------------------
+  # DP49 — Overcurrent (code 01) record #1 bytes 0..3
+  # -------------------------
+  - entity: select
+    name: Overcurrent Action
+    category: config
+    icon: mdi:alert
+    dps:
+      - id: 49
+        type: base64
+        name: option
+        mask: 00ff00000000000000000000
+        force: true
+        mapping:
+          - dps_val: 0
+            value: Disabled
+          - dps_val: 1
+            value: Enabled
+
+  - entity: number
+    name: Overcurrent Threshold
+    category: config
+    icon: mdi:current-ac
+    dps:
+      - id: 49
+        type: base64
+        name: value
+        mask: 0000ffff0000000000000000
+        unit: A
+        range:
+          min: 1
+          max: 63
+
+  # -------------------------
+  # DP49 — Overvoltage (code 03) record #2 bytes 4..7
+  # -------------------------
+  - entity: select
+    name: Overvoltage Action
+    category: config
+    icon: mdi:alert
+    dps:
+      - id: 49
+        type: base64
+        name: option
+        mask: 0000000000ff000000000000
+        mapping:
+          - dps_val: 0
+            value: Disabled
+          - dps_val: 1
+            value: Enabled
+
+  - entity: number
+    name: Overvoltage Threshold
+    category: config
+    icon: mdi:flash-alert
+    dps:
+      - id: 49
+        type: base64
+        name: value
+        mask: 000000000000ffff00000000
+        unit: V
+        range:
+          min: 220
+          max: 265
+
+  # -------------------------
+  # DP49 — Undervoltage (code 04) record #3 bytes 8..11
+  # -------------------------
+  - entity: select
+    name: Undervoltage Action
+    category: config
+    icon: mdi:alert
+    dps:
+      - id: 49
+        type: base64
+        name: option
+        mask: 000000000000000000ff0000
+        mapping:
+          - dps_val: 0
+            value: Disabled
+          - dps_val: 1
+            value: Enabled
+
+  - entity: number
+    name: Undervoltage Threshold
+    category: config
+    icon: mdi:flash-alert-outline
+    dps:
+      - id: 49
+        type: base64
+        name: value
+        mask: 00000000000000000000ffff
+        unit: V
+        range:
+          min: 76
+          max: 240
+
+  # -------------------------
+  # Online state query
+  # -------------------------
+  - entity: select
+    name: Online State
+    category: config
+    icon: mdi:cloud-sync
+    dps:
+      - id: 66
+        type: string
+        name: option
+        mapping:
+          - dps_val: "online"
+            value: "online"
+          - dps_val: "offline"
+            value: "offline"
