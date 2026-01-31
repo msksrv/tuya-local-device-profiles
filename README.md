@@ -19,6 +19,41 @@ Adds full local configuration of voltage protection logic:
 - Protection delays
 - Selectable protection actions: **Disabled / Alarm / Trip**
 
+### Energy monitoring SY2 (AT-Q-SY2-JWT)
+
+Local Tuya profile for the SY2 DIN-rail energy monitoring device with relay control.
+
+**Also sold / referenced as:**
+- **TO-Q-SY2-JWT** (Tongou branding)
+- **TQ-SY2-JWT** (alternative)
+
+**Model identifier reported by the device:** **AT-Q-SY2-JWT**
+
+#### Features
+- Relay control (on/off)
+- Energy monitoring:
+  - Total Energy (kWh, `total_increasing`, compatible with HA Energy dashboard)
+  - Power (W), Voltage (V), Current (mA)
+- Fault detection via DP26 bitfield:
+  - Individual fault flags (over current / over voltage / over power / low current / under voltage / under power)
+  - Aggregated **“Fault (Any)”** sensor
+- Read-only calibration coefficients (voltage / current / power / energy)
+- Device configuration:
+  - Power-on behavior (off / on / last state)
+  - LED / indicator mode
+  - Child lock
+- Internal temperature sensor (diagnostic)
+- Full alarm configuration via structured DP48 / DP49 records:
+  - High temperature
+  - High power
+  - Overcurrent
+  - Overvoltage
+  - Undervoltage
+- Online state query selector (DP66)
+- Fully local operation (no Tuya Cloud required)
+
+**Keywords:** AT-Q-SY2-JWT, TO-Q-SY2-JWT, TQ-SY2-JWT, SY2 energy monitor, Tuya DIN rail meter
+
 ## Installation
 
 1. Copy the desired YAML file into:
@@ -60,6 +95,41 @@ Use at your own discretion.
 - Пороги повышенного и пониженного напряжения
 - Задержки срабатывания защит
 - Выбор действия защиты: **Отключено / Тревога / Отключение**
+
+### Energy monitoring SY2 (AT-Q-SY2-JWT) — RU
+
+Локальный профиль Tuya для DIN-модуля мониторинга энергии серии SY2 с управлением реле.
+
+**Также продаётся / встречается как:**
+- **TO-Q-SY2-JWT** (бренд Tongou)
+- **TQ-SY2-JWT** (альтернативные)
+
+**Фактическая модель, возвращаемая устройством:** **AT-Q-SY2-JWT**
+
+#### Возможности
+- Управление реле (вкл / выкл)
+- Мониторинг энергии:
+  - Общая энергия (кВт·ч, `total_increasing`, совместимо с Energy Dashboard Home Assistant)
+  - Мощность (Вт), Напряжение (В), Ток (мА)
+- Обработка аварий через битовую маску DP26:
+  - Отдельные флаги аварий (переток / перенапряжение / перегрузка / низкий ток / пониженное напряжение / низкая мощность)
+  - Сводный сенсор **«Fault (Any)»**
+- Диагностические коэффициенты калибровки (напряжение / ток / мощность / энергия, только чтение)
+- Настройки устройства:
+  - Поведение при включении питания (выкл / вкл / последнее состояние)
+  - Режим индикатора / LED
+  - Детский замок
+- Встроенный датчик температуры (диагностика)
+- Полная настройка аварий через структурированные записи DP48 / DP49:
+  - Перегрев
+  - Превышение мощности
+  - Переток
+  - Перенапряжение
+  - Пониженное напряжение
+- Запрос состояния online_state (DP66)
+- Полностью локальная работа (без облака Tuya)
+
+**Ключевые слова:** AT-Q-SY2-JWT, TO-Q-SY2-JWT, TQ-SY2-JWT, SY2 монитор энергии, Tuya DIN-модуль  
 
 ## Установка
 
